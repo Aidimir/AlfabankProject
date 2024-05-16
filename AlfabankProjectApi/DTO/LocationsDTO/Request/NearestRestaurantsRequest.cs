@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+
 
 namespace AlfabankProjectApi.App.DTO.LocationsDTO.Request;
 public class NearestRestaurantsRequest

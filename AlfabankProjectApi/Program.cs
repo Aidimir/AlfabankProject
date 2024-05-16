@@ -1,8 +1,9 @@
 using AlfabankProjectApi.App.DepencyRegistration;
 using Microsoft.OpenApi.Models;
-using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddOutputCache();
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: true)
@@ -14,6 +15,16 @@ builder.Services.AddControllers();
 builder.Services.AddRouting();
 builder.Services.AddEndpointsApiExplorer();
 
+// Настройка JsonSerializerOptions для сериализации JSON в нижнем регистре
+var jsonOptions = new JsonSerializerOptions
+{
+    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+};
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = jsonOptions.PropertyNamingPolicy;
+});
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -21,6 +32,7 @@ builder.Services.AddSwaggerGen(c =>
         Title = "JokeApp",
         Version = "v1"
     });
+
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -49,6 +61,7 @@ builder.Services.AddLogicServices();
 
 
 var app = builder.Build();
+app.UseOutputCache();
 app.UseCors(x =>
 {
     x.AllowAnyOrigin();

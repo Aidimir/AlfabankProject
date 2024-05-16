@@ -18,4 +18,7 @@ public class Restaurant
     public string? ShortTitle { get; set; }
     [DisplayName("rating")]
     public double? Rating { get; set; }
+    [DisplayName("address")]
+    public string Address { get; set; }
+
 }

@@ -2,6 +2,7 @@
 using AlfabankProjectApi.App.DTO.LocationsDTO.Response;
 using AlfabankProjectApi.App.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 using System.Web;
 
 namespace AlfabankProjectApi.Services;
@@ -45,10 +46,9 @@ public class ApiService : ILocationsService, IRestaurantsService
 {
     private string key;
 
-    private string locationsRequestUrl = "https://catalog.api.2gis.com/3.0/items";
+    private string locationsRequestUrl = "https://catalog.api.2gis.ru/3.0/items";
     private string searchTags = "Поесть";
-    private List<string> searchFields = new List<string> { "items.address", "items.schedule", "items.reviews", "items.caption" };
-
+    private List<string> searchFields = new List<string> { "items.rubrics", "items.ads.options", "items.reviews", "items.external_content" };
     private string productsRequestUrl = "https://market-backend.api.2gis.ru/5.0/product/items_by_branch";
     private string featureConfig = "categories_without_fake_first_level,range_price_type_supported,from_price_type_supported";
     private string locale = "ru_RU";
@@ -58,7 +58,7 @@ public class ApiService : ILocationsService, IRestaurantsService
         key = config["2Gis:ApiKey"];
     }
 
-    public async Task<object> GetNearestRestaurantsAsync(string point, int radius)
+    public async Task<NearestRestaurantsResonse> GetNearestRestaurantsAsync(string point, int radius)
     {
         var uriBuilder = new UriBuilder(locationsRequestUrl);
         var queryParams = HttpUtility.ParseQueryString(uriBuilder.Query);
@@ -68,7 +68,8 @@ public class ApiService : ILocationsService, IRestaurantsService
         queryParams[GisApiLocationsHeaders.type.GetStringValue()] = "branch";
         queryParams[GisApiLocationsHeaders.q.GetStringValue()] = searchTags;
         queryParams[GisApiLocationsHeaders.key.GetStringValue()] = key;
-        queryParams["fields"] = string.Join(", ", searchFields);
+        queryParams["fields"] = string.Join(",", searchFields);
+        queryParams[GisApiProductHeaders.locale.GetStringValue()] = locale;
 
         uriBuilder.Query = queryParams.ToString();
 
@@ -80,7 +81,8 @@ public class ApiService : ILocationsService, IRestaurantsService
             {
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                return responseBody;
+                ApiRestaurantsResponse restaurants = JsonConvert.DeserializeObject<ApiRestaurantsResponse>(responseBody);
+                return new NearestRestaurantsResonse { Restaurants = restaurants.Result.Items, Success = true };
             }
             else
             {
