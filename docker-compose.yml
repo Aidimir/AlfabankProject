@@ -1,0 +1,8 @@
+version: '3.9'
+
+services:
+  alfabankprojectapi.app:
+    image: ${DOCKER_REGISTRY-}alfabankprojectapiapp
+    build:
+      context: .
+      dockerfile: AlfabankProjectApi/Dockerfile

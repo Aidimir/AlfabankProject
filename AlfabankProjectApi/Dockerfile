@@ -9,17 +9,18 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["AlfabankProjectApi/AlfabankProjectApi.csproj", "AlfabankProjectApi/"]
-RUN dotnet restore "./AlfabankProjectApi/AlfabankProjectApi.csproj"
+COPY ["AlfabankProjectApi/AlfabankProjectApi.App.csproj", "AlfabankProjectApi/"]
+COPY ["AlfabankProjectApi.DataLayer/AlfabankProjectApi.DataLayer.csproj", "AlfabankProjectApi.DataLayer/"]
+RUN dotnet restore "./AlfabankProjectApi/AlfabankProjectApi.App.csproj"
 COPY . .
 WORKDIR "/src/AlfabankProjectApi"
-RUN dotnet build "./AlfabankProjectApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./AlfabankProjectApi.App.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./AlfabankProjectApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./AlfabankProjectApi.App.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AlfabankProjectApi.dll"]
+ENTRYPOINT ["dotnet", "AlfabankProjectApi.App.dll"]
