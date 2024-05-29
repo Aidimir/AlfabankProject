@@ -57,9 +57,9 @@ public class RestaurantResponse
 
 public class ApiRestaurantsResponse
 {
-    public Result Result { get; set; }
+    public ApiRestaurantsResult Result { get; set; }
 }
-public class Result
+public class ApiRestaurantsResult
 {
     public List<RestaurantResponse> Items { get; set; }
 }

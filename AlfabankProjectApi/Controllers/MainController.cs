@@ -41,6 +41,7 @@ namespace AlfabankProjectApi.Controllers
 
         [HttpGet()]
         [Route("restaurant/menu")]
+        [ProducesDefaultResponseType(typeof(List<MenuByCategoriesResponse>))]
         [OutputCache]
         public async Task<ActionResult> GetRestaurantMenu([FromQuery] [Required] string orgId)
         {

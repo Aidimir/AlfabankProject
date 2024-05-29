@@ -29,7 +29,7 @@ public static class GisApiExtensions
             case GisApiLocationsHeaders.radius: return "radius";
             default: return string.Empty;
         }
-    }    
+    }
     public static string GetStringValue(this GisApiProductHeaders header)
     {
         switch (header)
@@ -90,7 +90,7 @@ public class ApiService : ILocationsService, IRestaurantsService
             }
         }
     }
-    public async Task<object> GetMenuAsync(string orgId)
+    public async Task<List<MenuByCategoriesResponse>> GetMenuAsync(string orgId)
     {
         var uriBuilder = new UriBuilder(productsRequestUrl);
         var queryParams = HttpUtility.ParseQueryString(uriBuilder.Query);
@@ -106,9 +106,27 @@ public class ApiService : ILocationsService, IRestaurantsService
 
             if (response.IsSuccessStatusCode)
             {
-                string responseBody = await response.Content.ReadAsStringAsync();
+                var responseBody = await response.Content.ReadAsStringAsync();
 
-                return responseBody;
+                var serializedResponse = JsonConvert.DeserializeObject<ApiMenuResponse>(responseBody);
+                
+                var result = new List<MenuByCategoriesResponse>();
+                result.Add(new MenuByCategoriesResponse { Category = "Все", Items = serializedResponse.Result.Items });
+
+                var allCategories = serializedResponse?.Result.Items.SelectMany(x => x.Product.Categories).Where(c => c.Name != null).Distinct().ToList();
+
+                var groupedByCategory = allCategories
+                    .Select(category => new MenuByCategoriesResponse
+                    {
+                        Category = category.Name,
+                        Items = serializedResponse.Result.Items
+                            .Where(item => item.Product.Categories.Any(c => c.Id == category.Id))
+                            .ToList()
+                    })
+                    .ToList();
+
+                result.AddRange(groupedByCategory);
+                return result;
             }
             else
             {
