@@ -113,14 +113,14 @@ public class ApiService : ILocationsService, IRestaurantsService
                 var result = new List<MenuByCategoriesResponse>();
                 result.Add(new MenuByCategoriesResponse { Category = "Все", Items = serializedResponse.Result.Items });
 
-                var allCategories = serializedResponse?.Result.Items.SelectMany(x => x.Product.Categories).Where(c => c.Name != null).Distinct().ToList();
+                var allCategories = serializedResponse?.Result.Items.SelectMany(x => x.Product.BlockingAttributes).Where(c => c.Caption != null).Distinct().ToList();
 
                 var groupedByCategory = allCategories
                     .Select(category => new MenuByCategoriesResponse
                     {
-                        Category = category.Name,
+                        Category = category.Caption,
                         Items = serializedResponse.Result.Items
-                            .Where(item => item.Product.Categories.Any(c => c.Id == category.Id))
+                            .Where(item => item.Product.BlockingAttributes.Any(c => c == category))
                             .ToList()
                     })
                     .ToList();

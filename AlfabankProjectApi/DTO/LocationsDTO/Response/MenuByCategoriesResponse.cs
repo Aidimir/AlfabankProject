@@ -1,4 +1,6 @@
-﻿namespace AlfabankProjectApi.App.DTO.LocationsDTO.Response;
+﻿using Newtonsoft.Json;
+
+namespace AlfabankProjectApi.App.DTO.LocationsDTO.Response;
 public class MenuByCategoriesResponse
 {
     public string Category { get; set; }
@@ -27,15 +29,15 @@ public class ApiMenuProduct
     public string Name { get; set; }
     public string Description { get; set; }
     public List<Uri> Images { get; set; }
-    public List<ApiMenuProductCategory> Categories { get; set; }
-}
-public class ApiMenuProductCategory
-{
-    public string Id { get; set; }
-    public string Name { get; set; }
+    [JsonProperty("blocking_attributes")]
+    public List<ApiMenuBlockingAttribute> BlockingAttributes { get; set; }
 }
 public class ApiMenuProductOffer
 {
     public double Price { get; set; }
     public string Currency { get; set; }
+}
+public class ApiMenuBlockingAttribute
+{
+    public string Caption { get; set; }
 }
