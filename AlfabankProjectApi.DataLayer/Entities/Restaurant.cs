@@ -20,5 +20,5 @@ public class Restaurant
     public double? Rating { get; set; }
     [DisplayName("address")]
     public string Address { get; set; }
-
+    public virtual List<MenuItem> Menus { get; set; }
 }

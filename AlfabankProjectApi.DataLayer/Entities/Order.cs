@@ -13,9 +13,9 @@ public class Order
     [Key]
     [DisplayName("id")]
     public Guid Id { get; set; }
-    //Придумать как хранить лист Id и парсить их в лист MenuItem
-    //на подобие внешнего ключа и виртуального поля Restaurant
-    public List<Guid> MenuItems { get; set; }
+    [ForeignKey("MenuItems")]
+    public List<Guid> MenuItemGuids { get; set; }
+    public virtual List<MenuItem> MenuItems { get; set; }
     [DisplayName("orderSum")]
     public double OrderSum { get; set; }
     [DisplayName("restaurant")]
