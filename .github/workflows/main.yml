@@ -16,8 +16,8 @@ jobs:
 
         - name: Build, tag, and push backend image to Yandex Cloud Container Registry
           env:
-            CR_REGISTRY: crpcfftmjsirktp5uuqs
-            CR_REPOSITORY: metrack
+            CR_REGISTRY: crp3bqch1n4usm9jv0i2
+            CR_REPOSITORY: alfabank-api
             IMAGE_TAG: ${{ github.sha }}
           run: |
             docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:latest .
