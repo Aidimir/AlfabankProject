@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   alfabankprojectapi.app:
-    image: ${DOCKER_REGISTRY-}alfabankprojectapiapp
+    image: cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
     build:
       context: .
       dockerfile: AlfabankProjectApi/Dockerfile
