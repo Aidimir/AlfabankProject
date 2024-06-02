@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseKestrel();
 builder.Services.AddOutputCache();
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -10,6 +11,7 @@ builder.Configuration
     .AddEnvironmentVariables();
 
 // Add services to the container.
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddControllers();
 builder.Services.AddRouting();
@@ -62,11 +64,12 @@ builder.Services.AddLogicServices();
 
 var app = builder.Build();
 app.UseOutputCache();
-app.UseCors(x =>
-{
-    x.AllowAnyOrigin();
-});
-
+app.UseRouting();
+app.UseCors(builder => builder
+       .AllowAnyHeader()
+       .AllowAnyMethod()
+       .AllowAnyOrigin()
+    );
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -74,7 +77,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRediresction();
 
 app.MapControllers();
 

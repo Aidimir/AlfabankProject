@@ -45,6 +45,7 @@ public static class GisApiExtensions
 public class ApiService : ILocationsService, IRestaurantsService
 {
     private string key;
+    private int randomOrderMenuCount = 3;
 
     private string locationsRequestUrl = "https://catalog.api.2gis.ru/3.0/items";
     private string searchTags = "Поесть";
@@ -133,5 +134,23 @@ public class ApiService : ILocationsService, IRestaurantsService
                 throw new Exception(response.StatusCode.ToString());
             }
         }
+    }
+
+    public async Task<List<ApiMenuProductWithOffer>> SelectRandomMenuByCategories(string orgId, List<string>? categories)
+    {
+        var chooseFrom = (await GetMenuAsync(orgId)).SelectMany(x => x.Items).Distinct().ToList();
+        var result = new List<ApiMenuProductWithOffer>();
+        var categoriesAlreadyUsed = new List<string>();
+        if (categories != null)
+            chooseFrom = chooseFrom.Where(x => categories.Intersect(x.Product.BlockingAttributes.Select(c => c.Caption)).Count() != 0).ToList();
+        
+        for (int i = 0; i < randomOrderMenuCount; i++)
+        {
+            var notInUsedCategories = chooseFrom.Where(c => !categoriesAlreadyUsed.Contains(c.Product.BlockingAttributes.SelectMany(attr => attr.Caption))).Single();
+            categoriesAlreadyUsed.AddRange(notInUsedCategories.Product.BlockingAttributes.Select(x => x.Caption).ToList());
+            result.Add(notInUsedCategories);
+        }
+
+        return result;
     }
 }

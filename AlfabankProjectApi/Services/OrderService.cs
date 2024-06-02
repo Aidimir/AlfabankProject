@@ -1,11 +1,19 @@
 ﻿using AlfabankProjectApi.DataLayer.Entities;
+using System.Diagnostics.Contracts;
 
 namespace AlfabankProjectApi.App.Services;
 
 public class OrderService
 {
-    public Guid AddToCart (Guid item)
+    public int ProcessCart(List<MenuItem> menus)
     {
-        var item = 
+        return GenerateRandomOrderNum();
+    }
+    public int GenerateRandomOrderNum() 
+    {
+        int _min = 100;
+        int _max = 999;
+        Random _rdm = new Random();
+        return _rdm.Next(_min, _max);
     }
 }

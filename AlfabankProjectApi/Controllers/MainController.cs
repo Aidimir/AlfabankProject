@@ -15,16 +15,12 @@ namespace AlfabankProjectApi.Controllers
 
         private readonly ILogger<MainController> _logger;
 
-        //private ILocationsService _locationsService;
-
         private ApiService _restaurantsService;
 
         public MainController(ILogger<MainController> logger,
-            //ILocationsService service,
             ApiService restaurantsService)
         {
             _logger = logger;
-            //_locationsService = service;
             _restaurantsService = restaurantsService;
         }
 
@@ -49,5 +45,16 @@ namespace AlfabankProjectApi.Controllers
 
             return Ok(result);
         }
+        [HttpGet()]
+        [Route("restaurant/menu/random")]
+        [ProducesDefaultResponseType(typeof(List<ApiMenuProductWithOffer>))]
+        [OutputCache]
+        public async Task<ActionResult> GetRestaurantMenu([FromQuery] [Required] string orgId, [FromQuery] List<string> categories)
+        {
+            var result = await _restaurantsService.SelectRandomMenuByCategories(orgId, categories);
+
+            return Ok(result);
+        }
+
     }
 }

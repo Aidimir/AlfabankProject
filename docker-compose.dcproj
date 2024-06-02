@@ -4,7 +4,7 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
-    <ProjectGuid>14d91064-4670-447a-95a3-b798866254b4</ProjectGuid>
+    <ProjectGuid>70441704-0678-4e2c-a4a5-e30c2737bd9b</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>alfabankprojectapi.app</DockerServiceName>

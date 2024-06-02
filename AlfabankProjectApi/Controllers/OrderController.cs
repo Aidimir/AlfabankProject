@@ -1,4 +1,5 @@
-﻿using AlfabankProjectApi.DataLayer.Entities;
+﻿using AlfabankProjectApi.App.Services;
+using AlfabankProjectApi.DataLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlfabankProjectApi.App.Controllers
@@ -7,21 +8,16 @@ namespace AlfabankProjectApi.App.Controllers
     [Route("api")]
     public class OrderController : ControllerBase
     {
-        [HttpGet("cart/{id}")]
-        public IActionResult GetCart(Guid id)
+        private OrderService _service;
+        public OrderController(OrderService service)
         {
-            return Ok();
+            _service = service;
         }
 
-        [HttpPost("cart")]
-        public IActionResult AddToCart(Guid itemId)
-        {
-            return Ok();
-        }
         [HttpPost("buy")]
-        public IActionResult BuyCart(Guid orderId)
+        public IActionResult BuyCart(List<MenuItem> menus)
         {
-            return Ok();
+            return Ok(_service.ProcessCart(menus));
         }
     }
 }
