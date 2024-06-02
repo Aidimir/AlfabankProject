@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddRouting();
 builder.Services.AddEndpointsApiExplorer();
 
-// Настройка JsonSerializerOptions для сериализации JSON в нижнем регистре
+// ГЌГ Г±ГІГ°Г®Г©ГЄГ  JsonSerializerOptions Г¤Г«Гї Г±ГҐГ°ГЁГ Г«ГЁГ§Г Г¶ГЁГЁ JSON Гў Г­ГЁГ¦Г­ГҐГ¬ Г°ГҐГЈГЁГ±ГІГ°ГҐ
 var jsonOptions = new JsonSerializerOptions
 {
     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -77,7 +77,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRediresction();
+//app.UseHttpsRediresction();
 
 app.MapControllers();
 
