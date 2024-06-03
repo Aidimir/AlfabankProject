@@ -20,8 +20,9 @@ jobs:
             CR_REPOSITORY: alfabank-api
             IMAGE_TAG: ${{ github.sha }}
           run: |
-            docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+            docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:latest .
             docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+            docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:latest
         - name: Deploy to Yandex
           uses: appleboy/ssh-action@v1.0.3
           with:
